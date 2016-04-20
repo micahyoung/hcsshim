@@ -41,6 +41,8 @@ import (
 //sys exportLayerEnd(context uintptr) (hr error) = vmcompute.ExportLayerEnd?
 
 //sys createComputeSystem(id string, configuration string) (hr error) = vmcompute.CreateComputeSystem?
+//sys attachComputeSystemEndpoint(id string, epid string) (hr error) = vmcompute.AttachComputeSystemEndpoint?
+//sys detachComputeSystemEndpoint(id string, epid string) (hr error) = vmcompute.DetachComputeSystemEndpoint?
 //sys createProcessWithStdHandlesInComputeSystem(id string, paramsJson string, pid *uint32, stdin *syscall.Handle, stdout *syscall.Handle, stderr *syscall.Handle) (hr error) = vmcompute.CreateProcessWithStdHandlesInComputeSystem?
 //sys resizeConsoleInComputeSystem(id string, pid uint32, height uint16, width uint16, flags uint32) (hr error) = vmcompute.ResizeConsoleInComputeSystem?
 //sys shutdownComputeSystem(id string, timeout uint32) (hr error) = vmcompute.ShutdownComputeSystem?

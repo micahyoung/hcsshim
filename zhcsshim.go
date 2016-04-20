@@ -2,11 +2,7 @@
 
 package hcsshim
 
-import (
-	"unsafe"
-
-	"github.com/Microsoft/go-winio"
-)
+import "unsafe"
 import "syscall"
 
 var _ unsafe.Pointer
@@ -41,6 +37,8 @@ var (
 	procExportLayerRead                            = modvmcompute.NewProc("ExportLayerRead")
 	procExportLayerEnd                             = modvmcompute.NewProc("ExportLayerEnd")
 	procCreateComputeSystem                        = modvmcompute.NewProc("CreateComputeSystem")
+	procAttachComputeSystemEndpoint                = modvmcompute.NewProc("AttachComputeSystemEndpoint")
+	procDetachComputeSystemEndpoint                = modvmcompute.NewProc("DetachComputeSystemEndpoint")
 	procCreateProcessWithStdHandlesInComputeSystem = modvmcompute.NewProc("CreateProcessWithStdHandlesInComputeSystem")
 	procResizeConsoleInComputeSystem               = modvmcompute.NewProc("ResizeConsoleInComputeSystem")
 	procShutdownComputeSystem                      = modvmcompute.NewProc("ShutdownComputeSystem")
@@ -563,6 +561,56 @@ func _createComputeSystem(id *uint16, configuration *uint16) (hr error) {
 		return
 	}
 	r0, _, _ := syscall.Syscall(procCreateComputeSystem.Addr(), 2, uintptr(unsafe.Pointer(id)), uintptr(unsafe.Pointer(configuration)), 0)
+	if int32(r0) < 0 {
+		hr = syscall.Errno(win32FromHresult(r0))
+	}
+	return
+}
+
+func attachComputeSystemEndpoint(id string, epid string) (hr error) {
+	var _p0 *uint16
+	_p0, hr = syscall.UTF16PtrFromString(id)
+	if hr != nil {
+		return
+	}
+	var _p1 *uint16
+	_p1, hr = syscall.UTF16PtrFromString(epid)
+	if hr != nil {
+		return
+	}
+	return _attachComputeSystemEndpoint(_p0, _p1)
+}
+
+func _attachComputeSystemEndpoint(id *uint16, epid *uint16) (hr error) {
+	if hr = procAttachComputeSystemEndpoint.Find(); hr != nil {
+		return
+	}
+	r0, _, _ := syscall.Syscall(procAttachComputeSystemEndpoint.Addr(), 2, uintptr(unsafe.Pointer(id)), uintptr(unsafe.Pointer(epid)), 0)
+	if int32(r0) < 0 {
+		hr = syscall.Errno(win32FromHresult(r0))
+	}
+	return
+}
+
+func detachComputeSystemEndpoint(id string, epid string) (hr error) {
+	var _p0 *uint16
+	_p0, hr = syscall.UTF16PtrFromString(id)
+	if hr != nil {
+		return
+	}
+	var _p1 *uint16
+	_p1, hr = syscall.UTF16PtrFromString(epid)
+	if hr != nil {
+		return
+	}
+	return _detachComputeSystemEndpoint(_p0, _p1)
+}
+
+func _detachComputeSystemEndpoint(id *uint16, epid *uint16) (hr error) {
+	if hr = procDetachComputeSystemEndpoint.Find(); hr != nil {
+		return
+	}
+	r0, _, _ := syscall.Syscall(procDetachComputeSystemEndpoint.Addr(), 2, uintptr(unsafe.Pointer(id)), uintptr(unsafe.Pointer(epid)), 0)
 	if int32(r0) < 0 {
 		hr = syscall.Errno(win32FromHresult(r0))
 	}
