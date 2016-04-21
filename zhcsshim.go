@@ -2,7 +2,12 @@
 
 package hcsshim
 
-import "unsafe"
+import (
+	"unsafe"
+
+	"github.com/Microsoft/go-winio"
+)
+
 import "syscall"
 
 var _ unsafe.Pointer
