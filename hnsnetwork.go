@@ -37,6 +37,7 @@ type HNSNetwork struct {
 	DNSServerList        string            `json:",omitempty"`
 	DNSServerCompartment uint32            `json:",omitempty"`
 	ManagementIP         string            `json:",omitempty"`
+	AutomaticDNS         bool              `json:",omitempty"`
 }
 
 type hnsNetworkResponse struct {

@@ -26,9 +26,9 @@ type LBPolicy struct {
 }
 
 type PolicyList struct {
-	Id                 string   `json:"ID,omitempty"`
-	EndpointReferences []string `json:"References,omitempty"`
-	Policies           []string `json:"Policies,omitempty"`
+	Id                 string            `json:"ID,omitempty"`
+	EndpointReferences []string          `json:"References,omitempty"`
+	Policies           []json.RawMessage `json:"Policies,omitempty"`
 }
 
 // HNSPolicyListRequest makes a call into HNS to update/query a single network
@@ -57,6 +57,7 @@ func PolicyListRequest(method, path, request string) (*PolicyList, error) {
 	policylist := &PolicyList{}
 	err := hnsCall(method, "/policylists/"+path, request, &policylist)
 	if err != nil {
+		logrus.Debugf("Request failed =%s", err)
 		return nil, err
 	}
 
@@ -152,7 +153,7 @@ func AddOutboundNAT(endpoints []string, vip string, protocol uint16, internalPor
 		return nil, err
 	}
 
-	policylist.Policies[0] = string(jsonString)
+	policylist.Policies[0] = jsonString
 	return policylist.Create()
 }
 
@@ -173,7 +174,7 @@ func AddLoadBalancer(endpoints []string, isILB bool, vip string, elbPolicies []E
 		if err != nil {
 			return nil, err
 		}
-		policylist.Policies = append(policylist.Policies, string(jsonString))
+		policylist.Policies = append(policylist.Policies, jsonString)
 	}
 
 	return policylist.Create()
